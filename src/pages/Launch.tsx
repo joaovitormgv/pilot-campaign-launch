@@ -193,116 +193,105 @@ export default function Launch() {
           {/* Ad Setup Selection */}
           <Card className="card-elevated">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span>Ad Setup</span>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span>Ad Setup</span>
+                </div>
+                <div className="relative">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAdSetupDropdown(!showAdSetupDropdown)}
+                    className="flex items-center space-x-2"
+                  >
+                    <span>Load Ad Copy</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${showAdSetupDropdown ? 'rotate-180' : ''}`} />
+                  </Button>
+                  
+                  {showAdSetupDropdown && (
+                    <div className="absolute top-full right-0 mt-1 bg-background border border-border rounded-lg shadow-lg z-50 w-64">
+                      {adSetupTemplates.map((template) => (
+                        <div
+                          key={template.id}
+                          className="p-3 hover:bg-muted cursor-pointer border-b border-border last:border-b-0"
+                          onClick={() => {
+                            setSelectedAdSetup(template.id);
+                            setShowAdSetupDropdown(false);
+                          }}
+                        >
+                          <h4 className="font-medium text-foreground">{template.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Primary text, headline, description and more
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-3">
-                {adSetupTemplates.map((template) => (
-                  <div
-                    key={template.id}
-                    className={`p-4 rounded-xl border cursor-pointer transition-all duration-200 ${
-                      selectedAdSetup === template.id
-                        ? "border-primary bg-primary/5 shadow-soft"
-                        : "border-border hover:border-primary/50 hover:bg-muted/50"
-                    }`}
-                    onClick={() => {
-                      setSelectedAdSetup(selectedAdSetup === template.id ? null : template.id);
-                      setShowAdSetupDropdown(selectedAdSetup !== template.id);
-                    }}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-medium text-foreground">{template.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Primary text, headline, description and more
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Settings className="w-4 h-4 text-muted-foreground" />
-                        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${
-                          selectedAdSetup === template.id && showAdSetupDropdown ? 'rotate-180' : ''
-                        }`} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {selectedAdSetup && showAdSetupDropdown && (
-                <div className="mt-4 p-4 bg-muted/30 rounded-xl border border-border">
-                  {(() => {
-                    const template = adSetupTemplates.find(t => t.id === selectedAdSetup);
-                    return template ? (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-foreground">Ad Setup Parameters</h4>
-                          <div className="flex space-x-2">
-                            <Button variant="outline" size="sm">Save Ad Copy</Button>
-                            <Button variant="outline" size="sm">Defaults</Button>
-                            <Button variant="outline" size="sm">Load Ad Copy</Button>
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 gap-4">
-                          <div>
-                            <label className="text-sm font-medium text-foreground">Primary Text</label>
-                            <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                              {template.primaryText}
-                            </p>
-                          </div>
-                          
-                          <div>
-                            <label className="text-sm font-medium text-foreground">Headline</label>
-                            <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                              {template.headline}
-                            </p>
-                          </div>
-                          
-                          <div>
-                            <label className="text-sm font-medium text-foreground">Description</label>
-                            <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                              {template.description}
-                            </p>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="text-sm font-medium text-foreground">Call to Action</label>
-                              <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                                {template.callToAction}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-foreground">Web Link</label>
-                              <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                                {template.webLink}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="text-sm font-medium text-foreground">UTM Parameters</label>
-                              <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                                {template.utmParams}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-foreground">Display Link</label>
-                              <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
-                                {template.displayLink}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : null;
-                  })()}
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium text-foreground">Ad Setup Parameters</h4>
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm">Save Ad Copy</Button>
+                  <Button variant="outline" size="sm">Defaults</Button>
                 </div>
-              )}
+              </div>
+              
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-foreground">Primary Text</label>
+                  <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                    {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.primaryText : "Select a template to load ad copy"}
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium text-foreground">Headline</label>
+                  <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                    {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.headline : "Select a template to load ad copy"}
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium text-foreground">Description</label>
+                  <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                    {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.description : "Select a template to load ad copy"}
+                  </p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-foreground">Call to Action</label>
+                    <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                      {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.callToAction : "Select a template"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground">Web Link</label>
+                    <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                      {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.webLink : "Select a template"}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-foreground">UTM Parameters</label>
+                    <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                      {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.utmParams : "Select a template"}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground">Display Link</label>
+                    <p className="text-sm text-muted-foreground bg-background p-2 rounded border mt-1">
+                      {selectedAdSetup ? adSetupTemplates.find(t => t.id === selectedAdSetup)?.displayLink : "Select a template"}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
